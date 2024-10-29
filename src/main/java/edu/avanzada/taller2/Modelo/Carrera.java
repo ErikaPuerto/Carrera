@@ -25,7 +25,11 @@ public class Carrera {
         caballos.add(caballo);
     }
 
-    public void iniciarCarrera() {
+    public void iniciarCarrera() {       
+        if (caballos.size() < 2) {
+            vista.mostrarMensaje("Se requieren al menos 2 caballos para iniciar la carrera.");
+            return;
+        }
         if (!carreraEnCurso) {
         carreraEnCurso = true;
         Thread semaforoThread = new Thread(new Semaforo(this));
@@ -68,6 +72,12 @@ public class Carrera {
         caballo.incrementarCarrerasGanadas();
         mostrarGanador(caballo);
     }
+public void interrumpirCaballo(Caballo caballo) {
+    if (caballo != null && caballo.isEnCarrera()) {
+        caballo.detener(); // Detenemos el caballo
+        System.out.println("El caballo " + caballo.getNombre() + " ha sido interrumpido.");
+    }
+}
 
     public int getLongitudPista() {
         return longitudPista;
@@ -85,6 +95,16 @@ public class Carrera {
     public void actualizarVistaSemaforo(String color) {
         if (vista != null) {vista.actualizarVistaSemaforo(color);}
     }
+    
+    public void reiniciarCaballos() {
+    for (Caballo caballo : caballos) {
+        caballo.setPosicion(0); // Restablece la posición a 0
+        caballo.setEnCarrera(true); // Establece que el caballo está listo para correr
+    }
+    carreraEnCurso = false; // Resetea el estado de carrera
+    vista.actualizarVistaSemaforo("ROJO"); // Cambia el semáforo a rojo
+}
+
 
     public void mostrarGanador(Caballo ganador) {
         if (ganador != null) {

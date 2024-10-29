@@ -119,6 +119,10 @@ public class VistaCarrera extends JFrame {
         }
         JOptionPane.showMessageDialog(this, resultados.toString());
     }
+    public void mostrarMensaje(String mensaje) {
+    JOptionPane.showMessageDialog(this, mensaje);
+}
+
 
     // Métodos para añadir los listeners a los botones
     public void agregarBotonAgregarCaballoListener(ActionListener listener) {

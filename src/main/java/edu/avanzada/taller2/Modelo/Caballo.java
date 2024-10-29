@@ -62,8 +62,16 @@ public class Caballo implements Runnable {
 
     public void reanudar() {
         enPausa = false; // Cambia el estado a no pausa
+        enCarrera = true; // Cambia el estado a en carrera
+    new Thread(this).start(); // Inicia un nuevo hilo para el caballo
     }
     
+    public void reiniciar() {
+    this.posicion = 0; // Regresa la posición a 0
+    this.enCarrera = true; // Asegúrate de que el caballo esté en carrera
+    this.enPausa = false; // Asegúrate de que no esté en pausa
+}
+
     public String getNombre() {
         return nombre;
     }
@@ -75,6 +83,14 @@ public class Caballo implements Runnable {
     public int getCarrerasGanadas() {
         return carrerasGanadas;
     }
+    public void setPosicion(int posicion) {
+    this.posicion = posicion;
+}
+
+public void setEnCarrera(boolean enCarrera) {
+    this.enCarrera = enCarrera;
+}
+
 
     public void incrementarCarrerasGanadas() {
         carrerasGanadas++;

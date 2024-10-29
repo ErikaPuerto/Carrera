@@ -7,11 +7,14 @@ import edu.avanzada.taller2.vista.VistaCarrera;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class ControladorCarrera {
     private Carrera carrera;
     private VistaCarrera vista;
+    private Caballo caballoDetenido;
+    private boolean carreraEnCurso;
 
     public ControladorCarrera(VistaCarrera vista) {
         this.vista = vista;
@@ -47,12 +50,38 @@ public class ControladorCarrera {
             JOptionPane.showMessageDialog(vista, "El nombre del caballo no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    
     private void iniciarCarrera() {
-        carrera.iniciarCarrera();
+    if (!carreraEnCurso) {
+        if (carrera.getCaballos().isEmpty()) {
+            vista.mostrarMensaje("No hay caballos en la carrera.");
+            return;
+        }
+        carrera.iniciarCarrera(); // Inicia la carrera
+        carreraEnCurso = true; // Establece que la carrera está en curso
+    } else {
+        // Si la carrera ya está en curso, reiniciamos los caballos
+        carrera.reiniciarCaballos(); // Reinicia los caballos
+        vista.mostrarMensaje("La carrera ha sido reiniciada.");
+        carrera.iniciarCarrera(); // Iniciar la carrera de nuevo
     }
+}
+
+
 
     private void interrumpirCaballo() {
-        carrera.interrumpirCaballoAleatorio();
+        if (caballoDetenido == null) {
+            // Elegir un caballo aleatorio para interrumpir
+            Random random = new Random();
+            caballoDetenido = carrera.getCaballos().get(random.nextInt(carrera.getCaballos().size()));
+            carrera.interrumpirCaballo(caballoDetenido);
+            vista.mostrarMensaje("El caballo " + caballoDetenido.getNombre() + " ha sido interrumpido.");
+        } else {
+            // Reanudar el caballo previamente interrumpido
+            caballoDetenido.reanudar();
+            vista.mostrarMensaje("El caballo " + caballoDetenido.getNombre() + " ha reanudado la carrera.");
+            caballoDetenido = null; // Restablecer la variable
+        }
     }
 
     private void salirPrograma() {
