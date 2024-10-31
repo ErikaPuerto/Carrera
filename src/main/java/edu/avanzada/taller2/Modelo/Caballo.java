@@ -1,4 +1,3 @@
-
 package edu.avanzada.taller2.Modelo;
 
 import java.util.Random;

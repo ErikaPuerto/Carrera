@@ -1,4 +1,3 @@
-
 package edu.avanzada.taller2.vista;
 
 
@@ -9,6 +8,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
+import java.net.URL; 
+import java.io.InputStream; 
+import javax.imageio.ImageIO; 
 
 
 public class VistaCarrera extends JFrame {
@@ -70,11 +72,24 @@ public class VistaCarrera extends JFrame {
     }
 
     public void agregarCaballo(Caballo caballo) {
-        JLabel caballoLabel = new JLabel(caballo.getNombre());
-        caballoLabel.setBounds(0, caballosLabels.size() * 30, 100, 20);
+    // Cargar la imagen usando una ruta relativa
+    URL imageUrl = getClass().getClassLoader().getResource("caballo.png");
+
+    // Verificar si la imagen se ha encontrado
+    if (imageUrl != null) {
+        ImageIcon iconoCaballo = new ImageIcon(imageUrl);
+        JLabel caballoLabel = new JLabel(iconoCaballo);
+        
+        int posY = caballosLabels.size() * (iconoCaballo.getIconHeight() + 10); // Espacio entre caballos
+        caballoLabel.setBounds(0, posY, iconoCaballo.getIconWidth(), iconoCaballo.getIconHeight());
         pistaPanel.add(caballoLabel);
         caballosLabels.put(caballo, caballoLabel);
+        pistaPanel.repaint();
+    } else {
+        System.out.println("La imagen no se encontró en la ruta especificada.");
     }
+}
+
 
     public void actualizarVistaSemaforo(String color) {
     // Cambiar el texto del JLabel del semáforo según el color recibido
@@ -97,12 +112,13 @@ public class VistaCarrera extends JFrame {
 
 
     public void actualizarPosicionCaballo(Caballo caballo, int posicion) {
-        JLabel caballoLabel = caballosLabels.get(caballo);  // caballosLabels es un Map de JLabels por nombre de caballo
+    JLabel caballoLabel = caballosLabels.get(caballo);
     if (caballoLabel != null) {
-        caballoLabel.setLocation(posicion, caballoLabel.getY()); // Actualiza la posición horizontal
+        caballoLabel.setLocation(posicion, caballoLabel.getY()); // Mueve la imagen horizontalmente
         caballoLabel.repaint();
-        }
     }
+}
+
 
     public void mostrarGanador(String mensaje) {
         ganadorLabel.setText(mensaje);
