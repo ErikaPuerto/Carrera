@@ -1,11 +1,11 @@
 package edu.avanzada.taller2.Modelo;
 
-import edu.avanzada.taller2.vista.VistaCarrera;
+import edu.avanzada.taller2.vista.VistaCarre;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Carrera {
-    private VistaCarrera vista;
+    private VistaCarre vista;
     private List<Caballo> caballos;
     private int longitudPista;
     private Semaforo semaforo;
@@ -13,7 +13,7 @@ public class Carrera {
     private List<Caballo> caballosGanadores = new ArrayList<>();
     private boolean hayGanador = false; // Variable para controlar si ya hay un ganador
 
-    public Carrera(int longitudPista, VistaCarrera vista) {
+    public Carrera(int longitudPista, VistaCarre vista) {
         this.caballos = new ArrayList<>();
         this.longitudPista = longitudPista;
         this.carreraEnCurso = false;
@@ -35,7 +35,7 @@ public class Carrera {
             reiniciarCaballos();
             carreraEnCurso = true;
             new Thread(semaforo).start();
-            System.out.println("Iniciando carrera...");
+            vista.info.setText( vista.info.getText()+"\n Iniciando carrera...\n");
         }
     }
 

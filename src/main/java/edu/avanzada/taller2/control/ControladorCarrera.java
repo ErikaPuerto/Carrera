@@ -2,41 +2,44 @@ package edu.avanzada.taller2.control;
 
 import edu.avanzada.taller2.Modelo.Caballo;
 import edu.avanzada.taller2.Modelo.Carrera;
+import edu.avanzada.taller2.vista.VistaCarre;
 import edu.avanzada.taller2.vista.VistaCarrera;
 import javax.swing.JOptionPane;
 
 public class ControladorCarrera {
     private Carrera carrera;
-    private VistaCarrera vista;
+    private ControladorPrincipal cp;
     private ControladorInterrupcion controladorInterrupcion;
 
-    public ControladorCarrera(Carrera carrera, VistaCarrera vista) {
+    public ControladorCarrera(ControladorPrincipal cp,Carrera carrera, VistaCarre vista) {
         this.carrera = carrera;
-        this.vista = vista;
-        this.controladorInterrupcion = new ControladorInterrupcion(carrera);
+        this.cp=cp;
+        this.controladorInterrupcion = new ControladorInterrupcion(carrera, cp);
         configurarEventosVista();
     }
 
     private void configurarEventosVista() {
-        vista.agregarBotonAgregarCaballoListener(e -> agregarCaballo());
-        vista.agregarBotonIniciarListener(e -> carrera.iniciarCarrera());
-        vista.agregarBotonInterrumpirListener(e -> controladorInterrupcion.interrumpirCaballoAleatorio());
-        vista.agregarBotonSalirListener(e -> salirAplicacion());
+        cp.vista.agregarBotonAgregarCaballoListener(e -> agregarCaballo());
+        cp.vista.agregarBotonIniciarListener(e -> carrera.iniciarCarrera());
+        cp.vista.agregarBotonInterrumpirListener(e -> controladorInterrupcion.interrumpirCaballoAleatorio());
+        cp.vista.agregarBotonSalirListener(e -> salirAplicacion());
     }
 
     private void agregarCaballo() {
-        String nombre = JOptionPane.showInputDialog(vista, "Ingrese el nombre del caballo:");
+        String nombre = JOptionPane.showInputDialog(cp.vista, "Ingrese el nombre del caballo:");
         if (nombre != null && !nombre.trim().isEmpty()) {
             Caballo nuevoCaballo = new Caballo(nombre.trim(), carrera);
+            
+            cp.vista.info.setText( cp.vista.info.getText()+"\n Se ha agregado el caballo  "+ nombre+".\n");
             carrera.agregarCaballo(nuevoCaballo);
         } else {
-            JOptionPane.showMessageDialog(vista, "Nombre no válido. Inténtelo de nuevo.");
+            JOptionPane.showMessageDialog(cp.vista, "Nombre no válido. Inténtelo de nuevo.");
         }
     }
 
     private void salirAplicacion() {
         carrera.finalizarCarrera(); // Finaliza la carrera antes de salir
-        vista.dispose();
+        cp.vista.dispose();
         System.exit(0);
     }
 }

@@ -8,9 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.net.URL; 
-import java.io.InputStream; 
-import javax.imageio.ImageIO; 
+import java.net.URL;
 
 
 public class VistaCarrera extends JFrame {
