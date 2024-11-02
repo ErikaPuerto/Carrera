@@ -2,7 +2,6 @@ package edu.avanzada.taller2.control;
 
 import edu.avanzada.taller2.Modelo.Caballo;
 import edu.avanzada.taller2.Modelo.Carrera;
-import edu.avanzada.taller2.vista.VistaCarre;
 import java.util.Random;
 
 public class ControladorInterrupcion {

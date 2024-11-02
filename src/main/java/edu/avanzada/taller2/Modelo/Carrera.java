@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Carrera {
+
     private VistaCarre vista;
-    private List<Caballo> caballos;
+    protected List<Caballo> caballos;
     private int longitudPista;
     private Semaforo semaforo;
     private boolean carreraEnCurso;
@@ -35,7 +36,7 @@ public class Carrera {
             reiniciarCaballos();
             carreraEnCurso = true;
             new Thread(semaforo).start();
-            vista.info.setText( vista.info.getText()+"\n Iniciando carrera...\n");
+            vista.info.setText(vista.info.getText() + "\n Iniciando carrera...\n");
         }
     }
 
@@ -45,34 +46,36 @@ public class Carrera {
         }
     }
 
-     public void finalizarCarrera() {
+    public void finalizarCarrera() {
         carreraEnCurso = false;
         detenerTodosLosCaballos();
         vista.mostrarResultadosFinales(this); // Muestra los resultados finales
     }
 
     public synchronized void verificarGanador(Caballo caballo) {
-    if (!carreraEnCurso) return;
-    if (!hayGanador && caballo.getPosicion() >= longitudPista) {
-        caballosGanadores.add(caballo);
-        hayGanador = true; // Establece que ya hay un ganador
-        detenerTodosLosCaballos(); // Detiene a todos los caballos
-        if (caballosGanadores.size() == 1) {
-            mostrarGanador(caballosGanadores.get(0));
-        } else {
-            mostrarEmpate(caballosGanadores);
+        if (!carreraEnCurso) {
+            return;
         }
-        carreraEnCurso = false;
-    } else if (caballos.stream().allMatch(c -> c.getPosicion() >= longitudPista)) {
-        carreraEnCurso = false;
-        detenerTodosLosCaballos();
-        if (caballosGanadores.size() > 1) {
-            mostrarEmpate(caballosGanadores);
-        } else {
-            mostrarGanador(caballosGanadores.get(0));
+        if (!hayGanador && caballo.getPosicion() >= longitudPista) {
+            caballosGanadores.add(caballo);
+            hayGanador = true; // Establece que ya hay un ganador
+            detenerTodosLosCaballos(); // Detiene a todos los caballos
+            if (caballosGanadores.size() == 1) {
+                mostrarGanador(caballosGanadores.get(0));
+            } else {
+                mostrarEmpate(caballosGanadores);
+            }
+            carreraEnCurso = false;
+        } else if (caballos.stream().allMatch(c -> c.getPosicion() >= longitudPista)) {
+            carreraEnCurso = false;
+            detenerTodosLosCaballos();
+            if (caballosGanadores.size() > 1) {
+                mostrarEmpate(caballosGanadores);
+            } else {
+                mostrarGanador(caballosGanadores.get(0));
+            }
         }
     }
-}
 
     private void mostrarEmpate(List<Caballo> caballosEmpatados) {
         StringBuilder mensaje = new StringBuilder("Empate entre los caballos: ");
@@ -125,5 +128,19 @@ public class Carrera {
         hayGanador = false; // Reinicia el indicador de ganador
         caballosGanadores.clear(); // Limpia la lista de ganadores
         vista.actualizarVistaSemaforo("ROJO");
+    }
+
+    public boolean ComprobarNombre(String nombre){
+        boolean comp =true;
+        for (Caballo caballo : caballos) {
+            if (caballo.getNombre().equalsIgnoreCase(nombre)) {
+                comp=false;
+            }
+        }
+        return comp;
+    }
+    
+    public int NumCaballos() {
+        return caballos.size();
     }
 }
