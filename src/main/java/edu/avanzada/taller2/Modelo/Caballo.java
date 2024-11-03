@@ -1,27 +1,36 @@
 package edu.avanzada.taller2.Modelo;
 
+import edu.avanzada.taller2.control.ControladorCarrera;
+import edu.avanzada.taller2.Modelo.Carrera;
+import edu.avanzada.taller2.vista.Mensajes;
 import java.util.Random;
 
 public class Caballo implements Runnable {
+    private Mensajes mensaje;
     private String nombre;
     private int posicion;
     private boolean enCarrera;
+    private ControladorCarrera controlCarrera;
     private Carrera carrera;
     private int carrerasGanadas;
     private boolean enPausa;
 
-    public Caballo(String nombre, Carrera carrera) {
+    public Caballo(String nombre, Carrera carrera,ControladorCarrera controlCarrera) {
         this.nombre = nombre;
         this.carrera = carrera;
+        this.controlCarrera = controlCarrera;
         this.posicion = 0;
         this.enCarrera = true;
         this.carrerasGanadas = 0;
         this.enPausa = false;
+        
     }
 
     @Override
     public void run() {
         Random random = new Random();
+        int longitudPista = carrera.getLongitudPista();
+        
         while (enCarrera && posicion < carrera.getLongitudPista()) {
             try {
                 while (enPausa) {
@@ -30,19 +39,19 @@ public class Caballo implements Runnable {
                 
                 Thread.sleep(random.nextInt(500) + 100);  // Pausa aleatoria para simular el movimiento
                 posicion += random.nextInt(10) + 1;       // Avanza una distancia aleatoria
-                carrera.actualizarVista(this);            // Notifica a carrera para actualizar la vista
+                controlCarrera.actualizarVista(this);            // Notifica a carrera para actualizar la vista
 
                 if (posicion >= carrera.getLongitudPista()) {
-                    carrera.verificarGanador(this);       // Verificar si el caballo ha ganado
+                    controlCarrera.verificarGanador(this);       // Verificar si el caballo ha ganado
                     break;
                 }
             } catch (InterruptedException e) {
-                System.out.println(nombre + " ha sido interrumpido.");
+                mensaje.mostrarMensajeSystem(nombre + " ha sido interrumpido.");
                 break;
             }
         }
         if (enCarrera) {
-            carrera.verificarGanador(this);
+            controlCarrera.verificarGanador(this);
         }
     }
 

@@ -1,13 +1,14 @@
 package edu.avanzada.taller2.Modelo;
 
+import edu.avanzada.taller2.control.ControladorCarrera;
 import java.util.Random;
 
 
 public class Semaforo implements Runnable {
     private String estado;
-    private Carrera carrera;
+    private ControladorCarrera carrera;
 
-    public Semaforo(Carrera carrera) {
+    public Semaforo(ControladorCarrera carrera) {
         this.carrera = carrera;
         this.estado = "ROJO";
     }

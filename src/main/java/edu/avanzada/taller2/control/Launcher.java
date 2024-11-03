@@ -5,10 +5,6 @@ import javax.swing.SwingUtilities;
 
 public class Launcher {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Inicializamos el controlador principal para iniciar la aplicación
             ControladorPrincipal controladorPrincipal = new ControladorPrincipal();
-            controladorPrincipal.iniciarAplicacion();
-        });
-    }
-}
+        };
+ }
