@@ -1,8 +1,13 @@
-edu\avanzada\taller2\control\ControladorInterrupcion.class
 edu\avanzada\taller2\Modelo\Caballo.class
-edu\avanzada\taller2\Modelo\Semaforo.class
-edu\avanzada\taller2\vista\VistaCarrera.class
-edu\avanzada\taller2\control\Launcher.class
 edu\avanzada\taller2\control\ControladorPrincipal.class
+edu\avanzada\taller2\vista\VistaCarre$FondoPanel2.class
 edu\avanzada\taller2\Modelo\Carrera.class
+edu\avanzada\taller2\control\ControladorInterrupcion.class
+edu\avanzada\taller2\Modelo\Semaforo.class
+edu\avanzada\taller2\control\Launcher.class
+edu\avanzada\taller2\vista\VistaCarre$FondoPanel.class
+edu\avanzada\taller2\vista\Mensajes.class
+edu\avanzada\taller2\vista\VistaCarre.class
+edu\avanzada\taller2\vista\VistaCarre$1.class
+edu\avanzada\taller2\control\ControladorCaballo.class
 edu\avanzada\taller2\control\ControladorCarrera.class

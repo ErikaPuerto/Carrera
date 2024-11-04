@@ -1,129 +1,108 @@
+/**
+ * La clase Carrera representa una carrera de caballos, gestionando los caballos
+ * que participan, la longitud de la pista y el estado de la carrera.
+ */
 package edu.avanzada.taller2.Modelo;
 
-import edu.avanzada.taller2.vista.VistaCarrera;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Carrera {
-    private VistaCarrera vista;
-    private List<Caballo> caballos;
-    private int longitudPista;
-    private Semaforo semaforo;
-    private boolean carreraEnCurso;
-    private List<Caballo> caballosGanadores = new ArrayList<>();
-    private boolean hayGanador = false; // Variable para controlar si ya hay un ganador
 
-    public Carrera(int longitudPista, VistaCarrera vista) {
+    /**
+     * Lista de caballos participantes en la carrera.
+     */
+    private List<Caballo> caballos;
+
+    /**
+     * Longitud de la pista de la carrera en unidades (ej. metros).
+     */
+    private int longitudPista;
+
+    /**
+     * Indica si la carrera está en curso.
+     */
+    private boolean carreraEnCurso;
+
+    /**
+     * Constructor de la clase Carrera.
+     * Inicializa la lista de caballos, la longitud de la pista, y establece
+     * el estado de la carrera como no iniciada.
+     *
+     * @param longitudPista Longitud de la pista en unidades.
+     */
+    public Carrera(int longitudPista) {
         this.caballos = new ArrayList<>();
         this.longitudPista = longitudPista;
         this.carreraEnCurso = false;
-        this.semaforo = new Semaforo(this);
-        this.vista = vista;
     }
 
-    public void agregarCaballo(Caballo caballo) {
-        caballos.add(caballo);
-        vista.agregarCaballo(caballo);
-    }
-
-    public void iniciarCarrera() {
-        if (caballos.size() < 2) {
-            vista.mostrarMensaje("Se requieren al menos 2 caballos para iniciar la carrera.");
-            return;
-        }
-        if (!carreraEnCurso) {  // Si la carrera no está en curso, entonces reiniciar y comenzar
-            reiniciarCaballos();
-            carreraEnCurso = true;
-            new Thread(semaforo).start();
-            System.out.println("Iniciando carrera...");
-        }
-    }
-
-    public void iniciarCaballos() {
-        for (Caballo caballo : caballos) {
-            new Thread(caballo).start();
-        }
-    }
-
-     public void finalizarCarrera() {
-        carreraEnCurso = false;
-        detenerTodosLosCaballos();
-        vista.mostrarResultadosFinales(this); // Muestra los resultados finales
-    }
-
-    public synchronized void verificarGanador(Caballo caballo) {
-    if (!carreraEnCurso) return;
-    if (!hayGanador && caballo.getPosicion() >= longitudPista) {
-        caballosGanadores.add(caballo);
-        hayGanador = true; // Establece que ya hay un ganador
-        detenerTodosLosCaballos(); // Detiene a todos los caballos
-        if (caballosGanadores.size() == 1) {
-            mostrarGanador(caballosGanadores.get(0));
-        } else {
-            mostrarEmpate(caballosGanadores);
-        }
-        carreraEnCurso = false;
-    } else if (caballos.stream().allMatch(c -> c.getPosicion() >= longitudPista)) {
-        carreraEnCurso = false;
-        detenerTodosLosCaballos();
-        if (caballosGanadores.size() > 1) {
-            mostrarEmpate(caballosGanadores);
-        } else {
-            mostrarGanador(caballosGanadores.get(0));
-        }
-    }
-}
-
-    private void mostrarEmpate(List<Caballo> caballosEmpatados) {
-        StringBuilder mensaje = new StringBuilder("Empate entre los caballos: ");
-        for (Caballo caballo : caballosEmpatados) {
-            mensaje.append(caballo.getNombre()).append(" ");
-        }
-        vista.mostrarGanador(mensaje.toString());
-        vista.actualizarVistaSemaforo("ROJO");
-    }
-
-    private void mostrarGanador(Caballo ganador) {
-        vista.mostrarGanador("Ganador: " + ganador.getNombre());
-        ganador.incrementarCarrerasGanadas(); // Incrementa las carreras ganadas del caballo ganador
-        vista.actualizarVistaSemaforo("ROJO");
-    }
-
-    public void detenerTodosLosCaballos() {
-        for (Caballo caballo : caballos) {
-            caballo.detener();
-        }
-    }
-
+    /**
+     * Verifica si la carrera está en curso.
+     *
+     * @return true si la carrera está en curso, false en caso contrario.
+     */
     public boolean isCarreraEnCurso() {
         return carreraEnCurso;
     }
 
+    /**
+     * Establece el estado de la carrera.
+     *
+     * @param carreraEnCurso true si la carrera está en curso, false si no.
+     */
+    public void setCarreraEnCurso(boolean carreraEnCurso) {
+        this.carreraEnCurso = carreraEnCurso;
+    }
+
+    /**
+     * Obtiene la longitud de la pista de la carrera.
+     *
+     * @return La longitud de la pista.
+     */
     public int getLongitudPista() {
         return longitudPista;
     }
 
+    /**
+     * Obtiene la lista de caballos en la carrera.
+     *
+     * @return Lista de caballos participantes.
+     */
     public List<Caballo> getCaballos() {
         return caballos;
     }
 
-    // Métodos para actualizar la vista y mostrar el ganador
-    public void actualizarVista(Caballo caballo) {
-        vista.actualizarPosicionCaballo(caballo, caballo.getPosicion());
+    /**
+     * Obtiene el número de caballos en la carrera.
+     *
+     * @return Número de caballos en la carrera.
+     */
+    public int numCaballos() {
+        return caballos.size();
     }
 
-    public void actualizarVistaSemaforo(String color) {
-        vista.actualizarVistaSemaforo(color);
+    /**
+     * Agrega un caballo a la carrera.
+     *
+     * @param caballo El caballo a agregar.
+     */
+    public void agregarCaballo(Caballo caballo) {
+        caballos.add(caballo);
     }
 
-    public void reiniciarCaballos() {
-        for (Caballo caballo : caballos) {
-            caballo.setPosicion(0);
-            caballo.setEnCarrera(true);
+    /**
+     * Comprueba si ya existe un caballo en la carrera con el nombre proporcionado.
+     *
+     * @param nombre Nombre del caballo a verificar.
+     * @return true si no existe un caballo con ese nombre, false en caso contrario.
+     */
+    public boolean comprobarNombre(String nombre) {
+        for (Caballo caballo : getCaballos()) {
+            if (caballo.getNombre().equalsIgnoreCase(nombre)) {
+                return false;
+            }
         }
-        carreraEnCurso = false;
-        hayGanador = false; // Reinicia el indicador de ganador
-        caballosGanadores.clear(); // Limpia la lista de ganadores
-        vista.actualizarVistaSemaforo("ROJO");
+        return true;
     }
 }
