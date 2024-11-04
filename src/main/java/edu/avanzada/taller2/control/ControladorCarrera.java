@@ -33,8 +33,10 @@ public class ControladorCarrera {
             vista.mostrarMensaje("Se requieren al menos 2 caballos para iniciar la carrera.");
             return;
         }
+        reiniciarCaballos();
+        asignarRivales();// Asigna rivales antes de iniciar la carrera
         if (!carrera.isCarreraEnCurso()) {
-            reiniciarCaballos();
+            
             carrera.setCarreraEnCurso(true);
             new Thread(semaforo).start();
             vista.info.setText(vista.info.getText() + "\n Iniciando carrera...\n");
@@ -59,6 +61,7 @@ public class ControladorCarrera {
         if (!hayGanador && caballo.getPosicion() >= carrera.getLongitudPista()) {
             caballosGanadores.add(caballo);
             hayGanador = true;
+            caballo.detenerRivales(); // Notifica a todos los rivales para que se detengan
             detenerTodosLosCaballos();
             if (caballosGanadores.size() == 1) {
                 mostrarGanador(caballosGanadores.get(0));
@@ -66,14 +69,6 @@ public class ControladorCarrera {
                 mostrarEmpate(caballosGanadores);
             }
             carrera.setCarreraEnCurso(false);
-        } else if (carrera.getCaballos().stream().allMatch(c -> c.getPosicion() >= carrera.getLongitudPista())) {
-            carrera.setCarreraEnCurso(false);
-            detenerTodosLosCaballos();
-            if (caballosGanadores.size() > 1) {
-                mostrarEmpate(caballosGanadores);
-            } else {
-                mostrarGanador(caballosGanadores.get(0));
-            }
         }
     }
 
@@ -119,5 +114,14 @@ public class ControladorCarrera {
     
     public Carrera getCarrera() {
         return carrera;
+    }
+    
+    public void asignarRivales() {
+        List<Caballo> caballos = carrera.getCaballos();
+        for (Caballo caballoActual : caballos) {
+            List<Caballo> rivales = new ArrayList<>(caballos); 
+            rivales.remove(caballoActual); 
+            caballoActual.setRivales(rivales); 
+        }
     }
 }

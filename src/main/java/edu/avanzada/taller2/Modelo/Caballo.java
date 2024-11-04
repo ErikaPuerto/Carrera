@@ -3,6 +3,8 @@ package edu.avanzada.taller2.Modelo;
 import edu.avanzada.taller2.control.ControladorCarrera;
 import edu.avanzada.taller2.Modelo.Carrera;
 import edu.avanzada.taller2.vista.Mensajes;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Caballo implements Runnable {
@@ -14,6 +16,7 @@ public class Caballo implements Runnable {
     private Carrera carrera;
     private int carrerasGanadas;
     private boolean enPausa;
+    private List<Caballo> rivales;
 
     public Caballo(String nombre, Carrera carrera,ControladorCarrera controlCarrera) {
         this.nombre = nombre;
@@ -23,7 +26,7 @@ public class Caballo implements Runnable {
         this.enCarrera = true;
         this.carrerasGanadas = 0;
         this.enPausa = false;
-        
+        this.rivales = new ArrayList<>();
     }
 
     @Override
@@ -63,6 +66,12 @@ public class Caballo implements Runnable {
         enCarrera = false;
         Thread.currentThread().interrupt();
     }
+    
+    public void detenerRivales(){
+        for(Caballo rival : rivales){
+            rival.detener();
+        }
+    }
 
     public void pausar() {
         enPausa = true; // Cambia el estado a pausa
@@ -92,8 +101,12 @@ public class Caballo implements Runnable {
         return carrerasGanadas;
     }
     public void setPosicion(int posicion) {
-    this.posicion = posicion;
-}
+        this.posicion = posicion;
+    }
+    
+    public void setRivales(List<Caballo> rivales) {
+        this.rivales = rivales;
+    }
 
 public void setEnCarrera(boolean enCarrera) {
     this.enCarrera = enCarrera;
@@ -106,5 +119,4 @@ public void setEnCarrera(boolean enCarrera) {
     public boolean isEnCarrera() {
     return enCarrera; // Retorna el estado del caballo
 }
-
 }
